@@ -1,4 +1,4 @@
-name: Deploy Flask App
+name: Test code
 
 on:
   push:
@@ -6,21 +6,18 @@ on:
       - master
 
 jobs:
-  build-and-deploy:
+  build:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v2
-      - name: Set up Python 3.8
+      - name: Install python
         uses: actions/setup-python@v2
         with:
-          python-version: 3.8
-      - name: Install dependencies
+          python-version: 3.9
+      - name: Install deps
         run: |
-          python -m venv venv
-          venv/bin/pip install -r requirements.txt
-      - name: Deploy to Render
-        uses: actions/setup-python@v2
-        with:
-          github_token: ${{ secrets.GHUB_TOKEN }}
-          render_token: ${{ secrets.RENDER_TOKEN }}
-          render_app_name: app
+          python -m pip install --upgrade pip
+          pip install -r requirements.txt
+      - name: Run tests
+        run: |
+          python -m pytest

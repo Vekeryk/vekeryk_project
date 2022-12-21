@@ -23,15 +23,15 @@ def register():
             email=form.email.data,
             password=form.password.data
         )
-        try:
-            db.session.add(user)
-            db.session.commit()
-            flash(
-                f"Account created for {form.username.data}!", category='success')
-            return redirect(url_for("account.login"))
-        except:
-            db.session.flush()
-            db.session.rollback()
+        # try:
+        db.session.add(user)
+        db.session.commit()
+        flash(
+            f"Account created for {form.username.data}!", category='success')
+        return redirect(url_for("account.login"))
+        # except:
+        #     db.session.flush()
+        #     db.session.rollback()
 
     return render_template('register.html', form=form)
 
