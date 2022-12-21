@@ -9,7 +9,7 @@ class ContactForm(FlaskForm):
     email = StringField("Email", validators=[
                         DataRequired(), Email(message='Email is invalid')])
     phone = StringField("Phone", validators=[Regexp(
-        regex='^\+380[0-9]{9}$', message='Phone is invalid')
+        regex=r'^\+380[0-9]{9}$', message='Phone is invalid')
     ])
     subject = SelectField("Subject",
                           choices=[('1', 'Bug report'),
