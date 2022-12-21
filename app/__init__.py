@@ -48,7 +48,7 @@ def create_app(config_name='default'):
 
     engine = sqlalchemy.create_engine(app.config['SQLALCHEMY_DATABASE_URI'])
     inspector = sqlalchemy.inspect(engine)
-    if inspector.has_table("users"):
+    if not inspector.has_table("users"):
         with app.app_context():
             db.drop_all()
             db.create_all()
