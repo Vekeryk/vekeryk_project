@@ -3,6 +3,4 @@ __pycache__
 *.db
 migrations
 .flaskenv
-*.jpg
-*.png
 .pytest_cache

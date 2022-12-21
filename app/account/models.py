@@ -18,7 +18,7 @@ class User(db.Model, UserMixin):
     image_file = db.Column(db.String(120), nullable=False, default='default.jpg')
     about_me = db.Column(db.String(120), nullable=True)
     last_seen = db.Column(db.DateTime, default=now())
-    password_hashed = db.Column(db.String(40), unique=False, nullable=False)
+    password_hashed = db.Column(db.String(100), unique=False, nullable=False)
     
     own_tasks = db.relationship("Task", backref="owner", order_by=task_order)
     collaborate_tasks = db.relationship('Task', secondary=assosiation_table, backref=db.backref('collaborators'), order_by=task_order)
@@ -29,7 +29,7 @@ class User(db.Model, UserMixin):
 
     @password.setter
     def password(self, password):
-        self.password_hash = bcrypt.generate_password_hash(password).decode('utf8')
+        self.password_hashed = bcrypt.generate_password_hash(password).decode('utf8')
 
     def __init__(self, username, email, password):
         self.username = username
