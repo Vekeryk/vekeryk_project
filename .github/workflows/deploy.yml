@@ -22,7 +22,6 @@ jobs:
         run: |
           python -m pytest
       - name: Deploy to Render
-        - shell: bash
         env:
           DEPLOY_URL: ${{ DEPLOY_URL }}
         run: |
