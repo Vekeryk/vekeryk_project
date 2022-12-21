@@ -29,7 +29,7 @@ class User(db.Model, UserMixin):
 
     @password.setter
     def password(self, password):
-        self.password_hashed = bcrypt.generate_password_hash(password)
+        self.password_hash = bcrypt.generate_password_hash(password).decode('utf8')
 
     def __init__(self, username, email, password):
         self.username = username

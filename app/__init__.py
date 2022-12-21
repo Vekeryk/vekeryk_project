@@ -5,6 +5,7 @@ from flask_migrate import Migrate
 from flask_login import LoginManager
 from flask_ckeditor import CKEditor
 from flask_jwt_extended import JWTManager
+import sqlalchemy
 from config import config
 
 db = SQLAlchemy()
@@ -44,5 +45,15 @@ def create_app(config_name='default'):
         app.register_blueprint(category_api_bp, url_prefix='/api')
         app.register_blueprint(task_api_bp, url_prefix='/api/v2/tasks')
         app.register_blueprint(swagger_bp, url_prefix='/swagger')
+
+    engine = sqlalchemy.create_engine(app.config['SQLALCHEMY_DATABASE_URI'])
+    inspector = sqlalchemy.inspect(engine)
+    if not inspector.has_table("users"):
+        with app.app_context():
+            db.drop_all()
+            db.create_all()
+            app.logger.info('Initialized the database!')
+    else:
+        app.logger.info('Database already contains the users table.')
 
     return app
