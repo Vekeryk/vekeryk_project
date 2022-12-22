@@ -35,7 +35,7 @@ class UserTest(BaseTest):
                 follow_redirects=True
             )
         user = User.query.filter_by(email='test@test.com').first()
-        self.assertIsNone(user)
+        self.assertIsNotNone(user)
 
     def test_login_redirect(self):
         response = self.client.get('/account', follow_redirects=False)
