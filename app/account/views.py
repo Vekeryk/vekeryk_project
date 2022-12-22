@@ -6,10 +6,10 @@ from flask_login import login_user, current_user, logout_user, login_required
 from sqlalchemy.sql.functions import now
 from urllib.parse import urlparse, urljoin
 
-from .. import db
 from .models import User
 from .forms import RegistrationForm, LoginForm, UpdateAccountForm, ResetPasswordForm
 from . import account_bp
+from .. import db
 
 
 @account_bp.route('/register', methods=['GET', 'POST'])
@@ -23,15 +23,15 @@ def register():
             email=form.email.data,
             password=form.password.data
         )
-        # try:
-        db.session.add(user)
-        db.session.commit()
-        flash(
-            f"Account created for {form.username.data}!", category='success')
-        return redirect(url_for("account.login"))
-        # except:
-        #     db.session.flush()
-        #     db.session.rollback()
+        try:
+            db.session.add(user)
+            db.session.commit()
+            flash(
+                f"Account created for {form.username.data}!", category='success')
+            return redirect(url_for("account.login"))
+        except:
+            db.session.flush()
+            db.session.rollback()
 
     return render_template('register.html', form=form)
 

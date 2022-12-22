@@ -19,7 +19,8 @@ class User(db.Model, UserMixin):
     about_me = db.Column(db.String(120), nullable=True)
     last_seen = db.Column(db.DateTime, default=now())
     password_hashed = db.Column(db.String(350), unique=False, nullable=False)
-    
+    admin = db.Column(db.Boolean, default=False)
+
     own_tasks = db.relationship("Task", backref="owner", order_by=task_order)
     collaborate_tasks = db.relationship('Task', secondary=assosiation_table, backref=db.backref('collaborators'), order_by=task_order)
 
@@ -30,6 +31,9 @@ class User(db.Model, UserMixin):
     @password.setter
     def password(self, password):
         self.password_hashed = bcrypt.generate_password_hash(password).decode('utf8')
+
+    def is_admin(self):
+        return self.admin
 
     def __init__(self, username, email, password):
         self.username = username

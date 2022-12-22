@@ -5,6 +5,8 @@ from flask_migrate import Migrate
 from flask_login import LoginManager
 from flask_ckeditor import CKEditor
 from flask_jwt_extended import JWTManager
+from flask_admin import Admin
+from .admin.views import AdminModelView, IndexAdmin, CustomFileAdmin
 import sqlalchemy
 from config import config
 
@@ -13,6 +15,7 @@ bcrypt = Bcrypt()
 migrate = Migrate()
 ckeditor = CKEditor()
 jwt = JWTManager()
+admin = Admin()
 login_manager = LoginManager()
 login_manager.login_view = "account.login"
 login_manager.login_message_category = "info"
@@ -28,6 +31,14 @@ def create_app(config_name='default'):
     login_manager.init_app(app)
     ckeditor.init_app(app)
     jwt.init_app(app)
+
+    admin.init_app(app, index_view=IndexAdmin())
+    from .account.models import User
+    from .todo.models import Task, Category 
+    models = [User, Task, Category]
+    for model in models:
+        admin.add_view(AdminModelView(model, db.session, category='Models'))
+    admin.add_view(CustomFileAdmin(app.static_folder, '/static/', name='Static Files'))
 
     with app.app_context():
         from app.home import home_bp
